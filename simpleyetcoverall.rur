@@ -123,12 +123,24 @@ def dirrandomdir(dir):
         else:
             turn_dir()
 
-def wallfollow():
+def wallfollowtest1():
     while bContinue:
         if front_is_clear():
             move_ext()
         else:
             turn_left_ext()
+
+def wallfollowtest2():
+    bContinue = True
+    iCnt = 0
+    while bContinue:
+        iCnt += 1
+        if front_is_clear():
+            move_ext()
+        turn_left_ext()
+        while front_is_clear():
+            move_ext()
+
 
 
 print(dir())
