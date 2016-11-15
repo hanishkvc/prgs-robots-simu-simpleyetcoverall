@@ -170,12 +170,29 @@ def wallfollowtest3():
 
 def wallfollow():
     bContinue = True
-    turn_dir = turn_left_ext
-    turn_dir_opp = turn_right_ext
+    turn_left_ext()
+    if front_is_clear():
+        turn_right_ext()
+        turn_right_ext()
+        if front_is_clear():
+            turn_left_ext()
+        else:
+            print("Wall to right")
+            turn_dir = turn_right_ext
+            turn_dir_opp = turn_left_ext
+            turn_dir_opp()
+    else:
+        print("Wall to left")
+        turn_dir = turn_left_ext
+        turn_dir_opp = turn_right_ext
+        turn_dir_opp()
+
     while bContinue:
         iCnt = 0
-        while front_is_clear():
+        while True:
             turn_dir()
+            if not front_is_clear():
+                break
             iCnt += 1
             if (iCnt < 3) and front_is_clear():
                 move_ext()
