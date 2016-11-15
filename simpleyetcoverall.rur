@@ -1,0 +1,88 @@
+# SimpleYetCoverALL
+# HanishKVC, 2016
+#
+
+gFacing = 0
+gX = 0
+gY = 0
+gVisited = dict()
+gTMCnt = 0
+gPZZBlockedL1 = 0
+
+def move_ext():
+    global gX, gY
+    if (gFacing == 0):
+        gY += 1
+    elif (gFacing == 1):
+        gX -= 1
+    elif (gFacing == 2):
+        gY -= 1
+    elif (gFacing == 3):
+        gX += 1
+    else:
+        print("ERR: WRONGFACING: gFacing:{}, gX:{}, gY:{}".format(gFacing, gX, gY))
+        exit()
+    move()
+
+def turn_left_ext():
+    global gFacing
+    gFacing += 1
+    if (gFacing == 4):
+        gFacing = 0
+    turn_left()
+
+def turn_right_ext():
+    turn_left_ext()
+    turn_left_ext()
+    turn_left_ext()
+
+def turn_around():
+    turn_left_ext()
+    turn_left_ext()
+
+def mark_as_visited():
+    sKey = "{},{}".format(gX,gY)
+    gVisited[sKey] = 1
+
+def visited_already():
+    sKey = "{},{}".format(gX,gY)
+    if (gVisited.has_key(sKey)):
+        return True
+    else:
+        return False
+
+def turn_magic():
+    global gTMCnt
+    if (gTMCnt == 0) or (gTMCnt == 1):
+        print("Turn Left")
+        turn_left_ext()
+    else:
+        print("Turn Right")
+        turn_right_ext()
+    gTMCnt += 1
+    if (gTMCnt >= 4):
+        gTMCnt = 0
+
+def parzigzag():
+    global gPZZBlockedL1
+    sKeyExt = "{},{},{}".format(gX,gY,gFacing)
+    print(sKeyExt)
+    mark_as_visited()
+    if front_is_clear():
+        move_ext()
+    else:
+        turn_magic()
+        if front_is_clear():
+            move_ext()
+        else:
+            gPZZBlockedL1 += 1
+            if gPZZBlockedL1 > 2:
+                gPZZBlockedL1 = 0
+                print("Turn Around")
+                turn_around()
+        turn_magic()
+    parzigzag()
+
+print(dir())
+parzigzag()
+
