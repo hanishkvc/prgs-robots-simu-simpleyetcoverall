@@ -153,6 +153,39 @@ def wallfollowtest2():
             move_ext()
 
 
+def wallfollowtest3():
+    bContinue = True
+    turn_dir = turn_left_ext
+    turn_dir_opp = turn_right_ext
+    while bContinue:
+        turn_dir()
+        if front_is_clear():
+            move_ext()
+        turn_right_ext()
+        if front_is_clear():
+            move_ext()
+        else:
+            turn_dir_opp()
+
+
+def wallfollow():
+    bContinue = True
+    turn_dir = turn_left_ext
+    turn_dir_opp = turn_right_ext
+    while bContinue:
+        iCnt = 0
+        while front_is_clear():
+            turn_dir()
+            iCnt += 1
+            if (iCnt < 3) and front_is_clear():
+                move_ext()
+        turn_dir_opp()
+        if front_is_clear():
+            move_ext()
+        else:
+            turn_dir_opp()
+
+
 # iTurnMod = 1, it keeps growing every turn, TooFAST
 # iTurnMod = 2, it keeps growing every 2 turns, PERFECT
 # iTurnMod = 3, it keeps growing every 3 turns, INTERESTING
@@ -183,7 +216,7 @@ print(dir())
 #dirrandomdir(1)
 
 # Some interesting movements
-spiral(turn_left_ext, 2)
+#spiral(turn_left_ext, 2)
 
-#wallfollow()
+wallfollow()
 
