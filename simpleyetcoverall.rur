@@ -9,6 +9,7 @@ gVisited = dict()
 gTMCnt = 0
 gPZZBlockedL1 = 0
 gPZZBlockedL2 = 0
+gPZZOrientCnt = 0
 
 def move_ext():
     global gX, gY
@@ -68,6 +69,11 @@ def parzigzag():
     global gPZZBlockedL1
     global gPZZBlockedL2
     global gTMCnt
+    global gPZZOrientCnt
+    gTMCnt = 0
+    gPZZBlockedL1 = 0
+    gPZZBlockedL2 = 0
+    gPZZOrientCnt = 0
     bContinue = True
     while bContinue:
         sKeyExt = "{},{},{}".format(gX,gY,gFacing)
@@ -92,8 +98,21 @@ def parzigzag():
                 gTMCnt = 0
                 gPZZBlockedL1 = 0
                 gPZZBlockedL2 = 0
+                gPZZOrientCnt += 1
                 print("Changing Orientation")
+                if (gPZZOrientCnt > 4):
+                    print("Done with ParZigZag")
+                    return
+
+def wallfollow():
+    while bContinue:
+        if front_is_clear():
+            move_ext()
+        else:
+            turn_left_ext()
+
 
 print(dir())
 parzigzag()
+wallfollow()
 
