@@ -104,20 +104,24 @@ def parzigzag():
                     print("Done with ParZigZag")
                     return
 
-def leftrandomleft():
+def dirrandomdir(dir):
     bContinue = True
     iCnt = 0
     iChange = 20
+    if (dir == 0):
+        turn_dir = turn_left_ext
+    else:
+        turn_dir = turn_right_ext
     while bContinue:
         iCnt += 1
         if (iCnt % iChange) == 0:
             iChange = 4 + roll_dice()
             print("iChange = {}".format(iChange))
-            turn_left_ext()
+            turn_dir()
         if front_is_clear():
             move_ext()
         else:
-            turn_left_ext()
+            turn_dir()
 
 def wallfollow():
     while bContinue:
@@ -129,6 +133,7 @@ def wallfollow():
 
 print(dir())
 parzigzag()
-leftrandomleft()
+#leftrandomleft()
+dirrandomdir(1)
 #wallfollow()
 
