@@ -168,25 +168,36 @@ def wallfollowtest3():
             turn_dir_opp()
 
 
+WALL2RIGHT = 0
+WALL2LEFT = 1
 def wallfollow():
     bContinue = True
+    wallTo = WALL2RIGHT
     turn_left_ext()
     if front_is_clear():
         turn_right_ext()
         turn_right_ext()
         if front_is_clear():
+            print("No Wall to left or right, hunting...")
+            while front_is_clear():
+                move_ext()
             turn_left_ext()
+            wallTo = WALL2RIGHT
         else:
-            print("Wall to right")
-            turn_dir = turn_right_ext
-            turn_dir_opp = turn_left_ext
-            turn_dir_opp()
+            wallTo = WALL2RIGHT
     else:
+        wallTo = WALL2LEFT
+    if wallTo == WALL2LEFT:
         print("Wall to left")
         turn_dir = turn_left_ext
         turn_dir_opp = turn_right_ext
         turn_dir_opp()
-
+    else:
+        print("Wall to right")
+        turn_dir = turn_right_ext
+        turn_dir_opp = turn_left_ext
+        turn_dir_opp()
+    
     while bContinue:
         iCnt = 0
         while True:
