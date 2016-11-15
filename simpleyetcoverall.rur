@@ -8,6 +8,7 @@ gY = 0
 gVisited = dict()
 gTMCnt = 0
 gPZZBlockedL1 = 0
+gPZZBlockedL2 = 0
 
 def move_ext():
     global gX, gY
@@ -65,6 +66,8 @@ def turn_magic():
 
 def parzigzag():
     global gPZZBlockedL1
+    global gPZZBlockedL2
+    global gTMCnt
     bContinue = True
     while bContinue:
         sKeyExt = "{},{},{}".format(gX,gY,gFacing)
@@ -80,9 +83,17 @@ def parzigzag():
                 gPZZBlockedL1 += 1
                 if gPZZBlockedL1 > 2:
                     gPZZBlockedL1 = 0
+                    gPZZBlockedL2 += 1
                     print("Turn Around")
                     turn_around()
-            turn_magic()
+            if gPZZBlockedL2 < 5:
+                turn_magic()
+            else:
+                gTMCnt = 0
+                gPZZBlockedL1 = 0
+                gPZZBlockedL2 = 0
+                print("Changing Orientation")
 
 print(dir())
 parzigzag()
+
