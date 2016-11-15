@@ -65,24 +65,24 @@ def turn_magic():
 
 def parzigzag():
     global gPZZBlockedL1
-    sKeyExt = "{},{},{}".format(gX,gY,gFacing)
-    print(sKeyExt)
-    mark_as_visited()
-    if front_is_clear():
-        move_ext()
-    else:
-        turn_magic()
+    bContinue = True
+    while bContinue:
+        sKeyExt = "{},{},{}".format(gX,gY,gFacing)
+        print(sKeyExt)
+        mark_as_visited()
         if front_is_clear():
             move_ext()
         else:
-            gPZZBlockedL1 += 1
-            if gPZZBlockedL1 > 2:
-                gPZZBlockedL1 = 0
-                print("Turn Around")
-                turn_around()
-        turn_magic()
-    parzigzag()
+            turn_magic()
+            if front_is_clear():
+                move_ext()
+            else:
+                gPZZBlockedL1 += 1
+                if gPZZBlockedL1 > 2:
+                    gPZZBlockedL1 = 0
+                    print("Turn Around")
+                    turn_around()
+            turn_magic()
 
 print(dir())
 parzigzag()
-
