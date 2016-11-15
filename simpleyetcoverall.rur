@@ -11,6 +11,7 @@ gPZZBlockedL1 = 0
 gPZZBlockedL2 = 0
 gPZZOrientCnt = 0
 
+
 def move_ext():
     global gX, gY
     if (gFacing == 0):
@@ -26,6 +27,7 @@ def move_ext():
         exit()
     move()
 
+
 def turn_left_ext():
     global gFacing
     gFacing += 1
@@ -33,18 +35,22 @@ def turn_left_ext():
         gFacing = 0
     turn_left()
 
+
 def turn_right_ext():
     turn_left_ext()
     turn_left_ext()
     turn_left_ext()
 
+
 def turn_around():
     turn_left_ext()
     turn_left_ext()
 
+
 def mark_as_visited():
     sKey = "{},{}".format(gX,gY)
     gVisited[sKey] = 1
+
 
 def visited_already():
     sKey = "{},{}".format(gX,gY)
@@ -52,6 +58,7 @@ def visited_already():
         return True
     else:
         return False
+
 
 def turn_magic():
     global gTMCnt
@@ -64,6 +71,7 @@ def turn_magic():
     gTMCnt += 1
     if (gTMCnt >= 4):
         gTMCnt = 0
+
 
 def parzigzag():
     global gPZZBlockedL1
@@ -104,6 +112,7 @@ def parzigzag():
                     print("Done with ParZigZag")
                     return
 
+
 def dirrandomdir(dir):
     bContinue = True
     iCnt = 0
@@ -123,12 +132,14 @@ def dirrandomdir(dir):
         else:
             turn_dir()
 
+
 def wallfollowtest1():
     while bContinue:
         if front_is_clear():
             move_ext()
         else:
             turn_left_ext()
+
 
 def wallfollowtest2():
     bContinue = True
@@ -142,10 +153,37 @@ def wallfollowtest2():
             move_ext()
 
 
+# iTurnMod = 1, it keeps growing every turn, TooFAST
+# iTurnMod = 2, it keeps growing every 2 turns, PERFECT
+# iTurnMod = 3, it keeps growing every 3 turns, INTERESTING
+def spiral(turn_dir, iTurnMod):
+    bContinue = True
+    iCnt = 0
+    iTurn = 0
+    iSpiral = 1
+    while bContinue:
+        iCnt += 1
+        if iCnt > iSpiral:
+            turn_dir()
+            iCnt = 0
+            iTurn += 1
+            if (iTurn % iTurnMod) == 0:
+                iSpiral += 1
+        else:
+            if front_is_clear():
+                move_ext()
+
+
 
 print(dir())
-parzigzag()
+
+# Functions which potentially cover the full area most of the time
+#parzigzag()
 #leftrandomleft()
-dirrandomdir(1)
+#dirrandomdir(1)
+
+# Some interesting movements
+spiral(turn_left_ext, 2)
+
 #wallfollow()
 
