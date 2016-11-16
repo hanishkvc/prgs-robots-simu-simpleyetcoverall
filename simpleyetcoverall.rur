@@ -206,6 +206,7 @@ def wallfollowtest3():
 WALL2RIGHT = 0
 WALL2LEFT = 1
 gWALLFOLLOWQUITCNT = 2048
+gWALLFOLLOWMAXREPEATCNT = 2
 def wallfollow(bWalkCorrespondingRowCol=False):
     print("MODE: WallFollow")
     wallTo = WALL2RIGHT
@@ -234,12 +235,23 @@ def wallfollow(bWalkCorrespondingRowCol=False):
         turn_dir_opp = turn_left_ext
         turn_dir_opp()
 
+    gSX = gX
+    gSY = gY
+    gSFacing = gFacing
+    gSAgain = 0
     iCnt = 0
     bContinue = True
     while bContinue:
+        if (gSX == gX) and (gSY == gY) and (gSFacing == gFacing):
+            gSAgain += 1
+            print("At Starting position [{},{},{}] after {} steps, for {} time".format(gX,gY,gFacing,iCnt,gSAgain))
+            if (gSAgain >= gWALLFOLLOWMAXREPEATCNT):
+                bContinue = False
         iCnt += 1
         if iCnt > gWALLFOLLOWQUITCNT:
             bContinue = False
+        if (iCnt % 25) == 0:
+            print("NumOf WallSide Steps = {}".format(iCnt))
         iDirCheckedCnt = 0
         while True:
             turn_dir()
