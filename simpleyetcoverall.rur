@@ -203,6 +203,13 @@ def wallfollowtest3():
             turn_dir_opp()
 
 
+def walkotherway_andcomeback():
+    for i in range(2): # Go and ComeBack so 2
+        turn_around()
+        while front_is_clear():
+            move_ext()
+
+
 WALL2RIGHT = 0
 WALL2LEFT = 1
 gWALLFOLLOWQUITCNT = 2048
@@ -261,10 +268,8 @@ def wallfollow(bWalkCorrespondingRowCol=False):
             if (iDirCheckedCnt < 3) and front_is_clear():
                 move_ext()
         if bWalkCorrespondingRowCol:
-            for i in range(2): # Go and ComeBack so 2
-                turn_around()
-                while front_is_clear():
-                    move_ext()
+            #if (gAlongXVisited[gX] < gYWidth):
+            walkotherway_andcomeback()
         turn_dir_opp()
         if front_is_clear():
             move_ext()
