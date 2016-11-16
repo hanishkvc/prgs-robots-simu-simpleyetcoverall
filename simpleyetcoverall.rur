@@ -249,12 +249,10 @@ def wallfollow(bWalkCorrespondingRowCol=False):
             if (iDirCheckedCnt < 3) and front_is_clear():
                 move_ext()
         if bWalkCorrespondingRowCol:
-            turn_around()
-            while front_is_clear():
-                move_ext()
-            turn_around()
-            while front_is_clear():
-                move_ext()
+            for i in range(2): # Go and ComeBack so 2
+                turn_around()
+                while front_is_clear():
+                    move_ext()
         turn_dir_opp()
         if front_is_clear():
             move_ext()
