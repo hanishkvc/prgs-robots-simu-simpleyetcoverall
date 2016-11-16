@@ -290,18 +290,18 @@ def find_visited_rowscols():
     # Find Ys (i.e cells of X) which are visited, for_each/along X
     # Find Xs (i.e cells of Y) which are visited, for_each/along Y
     print("X => {} to {}, Y => {} to {}".format(gXMin, gXMax, gYMin, gYMax))
-    for x in range(gXMin, gXMax):
-        for y in range(gYMin, gYMax):
+    for x in range(gXMin, gXMax+1):
+        for y in range(gYMin, gYMax+1):
             gAlongXVisits[x] = 0
             gAlongYVisits[y] = 0
-    for x in range(gXMin, gXMax):
-        for y in range(gYMin, gYMax):
+    for x in range(gXMin, gXMax+1):
+        for y in range(gYMin, gYMax+1):
             if (visited_already(x,y)):
                 gAlongXVisits[x] += 1
                 gAlongYVisits[y] += 1
-    for x in range(gXMin, gXMax):
+    for x in range(gXMin, gXMax+1):
         print("For X[{}], numOfYs visited = {}".format(x, gAlongXVisits[x]))
-    for y in range(gYMin, gYMax):
+    for y in range(gYMin, gYMax+1):
         print("For Y[{}], numOfXs visited = {}".format(y, gAlongYVisits[y]))
     # This may be used in future such that one
     # Follows Wall to reach these low visited areas
