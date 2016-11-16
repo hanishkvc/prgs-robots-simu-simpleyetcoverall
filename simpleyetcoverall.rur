@@ -209,13 +209,13 @@ def wallfollow():
         turn_dir_opp()
     
     while bContinue:
-        iCnt = 0
+        iDirCheckedCnt = 0
         while True:
             turn_dir()
             if not front_is_clear():
                 break
-            iCnt += 1
-            if (iCnt < 3) and front_is_clear():
+            iDirCheckedCnt += 1
+            if (iDirCheckedCnt < 3) and front_is_clear():
                 move_ext()
         turn_dir_opp()
         if front_is_clear():
@@ -248,13 +248,19 @@ def spiral(turn_dir, iTurnMod):
 
 print(dir())
 
+#
 # Functions which potentially cover the full area most of the time
-parzigzag()
+#parzigzag()
 #leftrandomleft()
 #dirrandomdir(1)
-
+#
 # Some interesting movements
 #spiral(turn_left_ext, 2)
+#
+#wallfollow()
+#
 
-wallfollow()
+while bContinue:
+    parzigzag()
+    wallfollow()
 
