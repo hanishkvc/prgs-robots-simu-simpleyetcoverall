@@ -14,6 +14,8 @@ gTMCnt = 0
 gPZZBlockedL1 = 0
 gPZZBlockedL2 = 0
 gPZZOrientCnt = 0
+gAlongXVisits = dict()
+gAlongYVisits = dict()
 
 
 def move_ext():
@@ -65,8 +67,13 @@ def mark_as_visited():
     gVisited[sKey] = 1
 
 
-def visited_already():
-    sKey = "{},{}".format(gX,gY)
+def visited_already(X=None, Y=None):
+    if X is None:
+        X = gX
+    if Y is None:
+        Y = gY
+    sKey = "{},{}".format(X,Y)
+    print("visited_already({})".format(sKey))
     if (gVisited.has_key(sKey)):
         return True
     else:
@@ -99,6 +106,7 @@ def parzigzag_changeorientation():
     print("Changing Orientation")
 
 
+gPZZNUMOFTURNAROUND4CHANGEORIENTATION = 4
 def parzigzag():
     global gPZZBlockedL1
     global gPZZBlockedL2
@@ -128,7 +136,7 @@ def parzigzag():
                     gPZZBlockedL2 += 1
                     print("Turn Around")
                     turn_around()
-            if gPZZBlockedL2 < 5:
+            if gPZZBlockedL2 < gPZZNUMOFTURNAROUND4CHANGEORIENTATION:
                 turn_magic()
             else:
                 parzigzag_changeorientation()
@@ -245,6 +253,16 @@ def wallfollow():
             turn_dir_opp()
 
 
+def wallfollow_updateparams():
+    global gWALLFOLLOWQUITCNT
+    iXDelta = gXMax - gXMin
+    iYDelta = gYMax - gYMin
+    iBoundry = iXDelta + iYDelta
+    print("iBoundry Found = {}".format(iBoundry))
+    gWALLFOLLOWQUITCNT = int(iBoundry * 10.3)
+    print("gWALLFOLLOWQUITCNT adjusted to {}".format(gWALLFOLLOWQUITCNT))
+
+
 # iTurnMod = 1, it keeps growing every turn, TooFAST
 # iTurnMod = 2, it keeps growing every 2 turns, PERFECT
 # iTurnMod = 3, it keeps growing every 3 turns, INTERESTING
@@ -267,6 +285,28 @@ def spiral(turn_dir, iTurnMod):
                 move_ext()
 
 
+def find_visited_rowscols():
+    # Using Visited map
+    # Find Ys (i.e cells of X) which are visited, for_each/along X
+    # Find Xs (i.e cells of Y) which are visited, for_each/along Y
+    print("X => {} to {}, Y => {} to {}".format(gXMin, gXMax, gYMin, gYMax))
+    for x in range(gXMin, gXMax):
+        for y in range(gYMin, gYMax):
+            gAlongXVisits[x] = 0
+            gAlongYVisits[y] = 0
+    for x in range(gXMin, gXMax):
+        for y in range(gYMin, gYMax):
+            if (visited_already(x,y)):
+                gAlongXVisits[x] += 1
+                gAlongYVisits[y] += 1
+    for x in range(gXMin, gXMax):
+        print("For X[{}], numOfYs visited = {}".format(x, gAlongXVisits[x]))
+    for y in range(gYMin, gYMax):
+        print("For Y[{}], numOfXs visited = {}".format(y, gAlongYVisits[y]))
+    # This may be used in future such that one
+    # Follows Wall to reach these low visited areas
+    # and run ParZigZag or something similar there to reach these not visited places
+
 
 print(dir())
 
@@ -284,11 +324,8 @@ print(dir())
 bContinue = True
 while bContinue:
     parzigzag()
-    iXDelta = gXMax - gXMin
-    iYDelta = gYMax - gYMin
-    iBoundry = iXDelta + iYDelta
-    print("iBoundry Found = {}".format(iBoundry))
-    gWALLFOLLOWQUITCNT = int(iBoundry * 2.5)
-    print("gWALLFOLLOWQUITCNT adjusted to {}".format(gWALLFOLLOWQUITCNT))
+    wallfollow_updateparams()
     wallfollow()
+    find_visited_rowscols()
+    bContinue = False # This is temporary for debugging
 
