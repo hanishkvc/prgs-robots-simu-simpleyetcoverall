@@ -95,6 +95,7 @@ def parzigzag():
     gPZZBlockedL1 = 0
     gPZZBlockedL2 = 0
     gPZZOrientCnt = 0
+    print("MODE: ParZigZag")
     iCnt = 0
     bContinue = True
     while bContinue:
@@ -124,6 +125,7 @@ def parzigzag():
 
 
 def dirrandomdir(dir):
+    print("MODE: DirRandomDir")
     bContinue = True
     iCnt = 0
     iChange = 20
@@ -180,8 +182,9 @@ def wallfollowtest3():
 
 WALL2RIGHT = 0
 WALL2LEFT = 1
+WALLFOLLOWQUITCNT = 2048
 def wallfollow():
-    bContinue = True
+    print("MODE: WallFollow")
     wallTo = WALL2RIGHT
     turn_left_ext()
     if front_is_clear():
@@ -207,8 +210,13 @@ def wallfollow():
         turn_dir = turn_right_ext
         turn_dir_opp = turn_left_ext
         turn_dir_opp()
-    
+
+    iCnt = 0
+    bContinue = True
     while bContinue:
+        iCnt += 1
+        if iCnt > WALLFOLLOWQUITCNT:
+            bContinue = False
         iDirCheckedCnt = 0
         while True:
             turn_dir()
@@ -228,6 +236,7 @@ def wallfollow():
 # iTurnMod = 2, it keeps growing every 2 turns, PERFECT
 # iTurnMod = 3, it keeps growing every 3 turns, INTERESTING
 def spiral(turn_dir, iTurnMod):
+    print("MODE: Spiral")
     bContinue = True
     iCnt = 0
     iTurn = 0
@@ -259,7 +268,7 @@ print(dir())
 #
 #wallfollow()
 #
-
+bContinue = True
 while bContinue:
     parzigzag()
     wallfollow()
