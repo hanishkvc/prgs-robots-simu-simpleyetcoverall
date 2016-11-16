@@ -5,6 +5,10 @@
 gFacing = 0
 gX = 0
 gY = 0
+gXMin = 0
+gXMax = 0
+gYMin = 0
+gYMax = 0
 gVisited = dict()
 gTMCnt = 0
 gPZZBlockedL1 = 0
@@ -14,6 +18,7 @@ gPZZOrientCnt = 0
 
 def move_ext():
     global gX, gY
+    global gXMin, gXMax, gYMin, gYMax
     if (gFacing == 0):
         gY += 1
     elif (gFacing == 1):
@@ -26,6 +31,14 @@ def move_ext():
         print("ERR: WRONGFACING: gFacing:{}, gX:{}, gY:{}".format(gFacing, gX, gY))
         exit()
     move()
+    if gXMin > gX:
+        gXMin = gX
+    if gXMax < gX:
+        gXMax = gX
+    if gYMin > gY:
+        gYMin = gY
+    if gYMax < gY:
+        gYMax = gY
 
 
 def turn_left_ext():
@@ -182,7 +195,7 @@ def wallfollowtest3():
 
 WALL2RIGHT = 0
 WALL2LEFT = 1
-WALLFOLLOWQUITCNT = 2048
+gWALLFOLLOWQUITCNT = 2048
 def wallfollow():
     print("MODE: WallFollow")
     wallTo = WALL2RIGHT
@@ -215,7 +228,7 @@ def wallfollow():
     bContinue = True
     while bContinue:
         iCnt += 1
-        if iCnt > WALLFOLLOWQUITCNT:
+        if iCnt > gWALLFOLLOWQUITCNT:
             bContinue = False
         iDirCheckedCnt = 0
         while True:
@@ -271,5 +284,11 @@ print(dir())
 bContinue = True
 while bContinue:
     parzigzag()
+    iXDelta = gXMax - gXMin
+    iYDelta = gYMax - gYMin
+    iBoundry = iXDelta + iYDelta
+    print("iBoundry Found = {}".format(iBoundry))
+    gWALLFOLLOWQUITCNT = int(iBoundry * 2.5)
+    print("gWALLFOLLOWQUITCNT adjusted to {}".format(gWALLFOLLOWQUITCNT))
     wallfollow()
 
