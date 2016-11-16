@@ -18,7 +18,7 @@ gAlongXVisits = dict()
 gAlongYVisits = dict()
 
 
-def move_ext():
+def move_ext(markVisited=True):
     global gX, gY
     global gXMin, gXMax, gYMin, gYMax
     if (gFacing == 0):
@@ -33,6 +33,8 @@ def move_ext():
         print("ERR: WRONGFACING: gFacing:{}, gX:{}, gY:{}".format(gFacing, gX, gY))
         exit()
     move()
+    if markVisited:
+        mark_as_visited()
     if gXMin > gX:
         gXMin = gX
     if gXMax < gX:
@@ -73,7 +75,7 @@ def visited_already(X=None, Y=None):
     if Y is None:
         Y = gY
     sKey = "{},{}".format(X,Y)
-    print("visited_already({})".format(sKey))
+    print("checking visited_already({})".format(sKey))
     if (gVisited.has_key(sKey)):
         return True
     else:
