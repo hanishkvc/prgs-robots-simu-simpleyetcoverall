@@ -206,7 +206,7 @@ def wallfollowtest3():
 WALL2RIGHT = 0
 WALL2LEFT = 1
 gWALLFOLLOWQUITCNT = 2048
-def wallfollow():
+def wallfollow(bWalkCorrespondingRowCol=False):
     print("MODE: WallFollow")
     wallTo = WALL2RIGHT
     turn_left_ext()
@@ -247,6 +247,13 @@ def wallfollow():
                 break
             iDirCheckedCnt += 1
             if (iDirCheckedCnt < 3) and front_is_clear():
+                move_ext()
+        if bWalkCorrespondingRowCol:
+            turn_around()
+            while front_is_clear():
+                move_ext()
+            turn_around()
+            while front_is_clear():
                 move_ext()
         turn_dir_opp()
         if front_is_clear():
@@ -323,11 +330,21 @@ print(dir())
 #
 #wallfollow()
 #
-bContinue = True
-while bContinue:
-    parzigzag()
-    wallfollow_updateparams()
-    wallfollow()
+
+def superwalk_ok1():
+    bContinue = True
+    while bContinue:
+        parzigzag()
+        wallfollow_updateparams()
+        wallfollow()
+        find_visited_rowscols()
+        bContinue = False # This is temporary for debugging
+
+def superwalk_good():
+    global gWALLFOLLOWQUITCNT
+    gWALLFOLLOWQUITCNT = 301
+    wallfollow(True)
     find_visited_rowscols()
-    bContinue = False # This is temporary for debugging
+
+superwalk_good()
 
