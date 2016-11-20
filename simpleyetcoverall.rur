@@ -213,10 +213,12 @@ def walkotherway_andcomeback(iWalkEitherSide):
             if (gSX == gX) and (gSY == gY) and (i == 1):
                 break
             move_ext()
-            if iWalkEitherSide > 0:
+            if (iWalkEitherSide > 0) and (i == 0):
                 turn_left_ext()
                 walkotherway_andcomeback(iWalkEitherSide-1)
-                turn_right_ext()
+                turn_around()
+                walkotherway_andcomeback(iWalkEitherSide-1)
+                turn_left_ext()
 
 
 WALL2RIGHT = 0
