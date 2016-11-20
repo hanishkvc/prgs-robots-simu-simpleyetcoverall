@@ -16,6 +16,8 @@ gPZZBlockedL2 = 0
 gPZZOrientCnt = 0
 gAlongXVisits = dict()
 gAlongYVisits = dict()
+gXWidth = 0
+gYWidth = 0
 
 
 def move_ext(markVisited=True):
@@ -221,6 +223,15 @@ def walkotherway_andcomeback(iWalkEitherSide):
                 turn_left_ext()
 
 
+def near_lowvisitarea():
+    if (gAlongXVisits[gX-1] < gYWidth):
+        return True
+    if (gAlongXVisits[gX] < gYWidth):
+        return True
+    if (gAlongXVisits[gX+1] < gYWidth):
+        return True
+
+
 WALL2RIGHT = 0
 WALL2LEFT = 1
 gWALLFOLLOWQUITCNT = 2048
@@ -279,8 +290,11 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
             if (iDirCheckedCnt < 3) and front_is_clear():
                 move_ext()
         if bWalkCorrespondingRowCol:
-            #if (gAlongXVisited[gX] < gYWidth):
-            walkotherway_andcomeback(iWalkEitherSide)
+            if (iWalkEitherSide > 0) and (near_lowvisitarea()):
+                print("Triggering WalkEitherSide for X,Y={},{}".format(gX,gY))
+                walkotherway_andcomeback(iWalkEitherSide)
+            else:
+                walkotherway_andcomeback(0)
         turn_dir_opp()
         if front_is_clear():
             move_ext()
@@ -321,10 +335,15 @@ def spiral(turn_dir, iTurnMod):
 
 
 def find_visited_rowscols():
+    global gXWidth
+    global gYWidth
     # Using Visited map
     # Find Ys (i.e cells of X) which are visited, for_each/along X
     # Find Xs (i.e cells of Y) which are visited, for_each/along Y
+    gXWidth = (gXMax - gXMin) + 1
+    gYWidth = (gYMax - gYMin) + 1
     print("X => {} to {}, Y => {} to {}".format(gXMin, gXMax, gYMin, gYMax))
+    print("XWidth => {}, YWidth => {}".format(gXWidth, gYWidth))
     for x in range(gXMin, gXMax+1):
         for y in range(gYMin, gYMax+1):
             gAlongXVisits[x] = 0
@@ -369,8 +388,8 @@ def superwalk_ok1():
 def superwalk_good():
     global gWALLFOLLOWQUITCNT
     gWALLFOLLOWQUITCNT = 301
-    #wallfollow(True)
-    #find_visited_rowscols()
+    wallfollow(True)
+    find_visited_rowscols()
     wallfollow(True,1)
 
 superwalk_good()
