@@ -247,7 +247,7 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
             print("No Wall to left or right, hunting...")
             while front_is_clear():
                 move_ext()
-            turn_left_ext()
+            #turn_left_ext()
             wallTo = WALL2RIGHT
         else:
             wallTo = WALL2RIGHT
@@ -271,11 +271,6 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
     iCnt = 0
     bContinue = True
     while bContinue:
-        if (gSX == gX) and (gSY == gY) and (gSFacing == gFacing):
-            gSAgain += 1
-            print("At Starting position [{},{},{}] after {} steps, for {} time".format(gX,gY,gFacing,iCnt,gSAgain))
-            if (gSAgain >= gWALLFOLLOWMAXREPEATCNT):
-                bContinue = False
         iCnt += 1
         if iCnt > gWALLFOLLOWQUITCNT:
             bContinue = False
@@ -283,6 +278,13 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
             print("NumOf WallSide Steps = {}".format(iCnt))
         iDirCheckedCnt = 0
         while True:
+            if (gSX == gX) and (gSY == gY) and (gSFacing == gFacing):
+                gSAgain += 1
+                print("At Starting position [{},{},{}] after {} steps, for {} time".format(gX,gY,gFacing,iCnt,gSAgain))
+                if (gSAgain >= gWALLFOLLOWMAXREPEATCNT):
+                    bContinue = False
+            else:
+                print("position [{},{},{}] after {} steps".format(gX,gY,gFacing,iCnt))
             turn_dir()
             if not front_is_clear():
                 break
