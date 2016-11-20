@@ -210,9 +210,9 @@ def walkotherway_andcomeback(iWalkEitherSide):
     for i in range(2): # Go and ComeBack so 2
         turn_around()
         while front_is_clear():
-            move_ext()
-            if (gSX == gX) and (gSY == gY):
+            if (gSX == gX) and (gSY == gY) and (i == 1):
                 break
+            move_ext()
             if iWalkEitherSide > 0:
                 turn_left_ext()
                 walkotherway_andcomeback(iWalkEitherSide-1)
@@ -367,8 +367,9 @@ def superwalk_ok1():
 def superwalk_good():
     global gWALLFOLLOWQUITCNT
     gWALLFOLLOWQUITCNT = 301
-    wallfollow(True)
-    find_visited_rowscols()
+    #wallfollow(True)
+    #find_visited_rowscols()
+    wallfollow(True,1)
 
 superwalk_good()
 
