@@ -224,11 +224,11 @@ def walkotherway_andcomeback(iWalkEitherSide):
 
 
 def near_lowvisitarea():
-    if (gAlongXVisits[gX-1] < gYWidth):
+    if ((gX-1) >= gXMin) and (gAlongXVisits[gX-1] < gYWidth):
         return True
     if (gAlongXVisits[gX] < gYWidth):
         return True
-    if (gAlongXVisits[gX+1] < gYWidth):
+    if ((gX+1) <= gXMax) and (gAlongXVisits[gX+1] < gYWidth):
         return True
 
 
