@@ -217,13 +217,15 @@ def walkotherway_andcomeback(iWalkEitherSide):
             move_ext()
             if (iWalkEitherSide > 0) and (i == 0):
                 turn_left_ext()
-                walkotherway_andcomeback(iWalkEitherSide-1)
+                if near_lowvisitarea(False):
+                    walkotherway_andcomeback(iWalkEitherSide-1)
                 turn_around()
-                walkotherway_andcomeback(iWalkEitherSide-1)
+                if near_lowvisitarea(False):
+                    walkotherway_andcomeback(iWalkEitherSide-1)
                 turn_left_ext()
 
 
-def near_lowvisitarea():
+def near_lowvisitarea(bAgressive=True):
     # TODO:FUTURE: Instead of the simple check of less than
     # other dimension's border, maybe
     # it should take a average of cells visited in the given
@@ -233,19 +235,28 @@ def near_lowvisitarea():
     # Assumes lazy evaluation where first the condition
     # to the left is checked, before checking the condition
     # towards right of the conditional statement.
+    bXLow = False
+    bYLow = False
     if ((gX-1) >= gXMin) and (gForXVisitsAlongY[gX-1] < gYWidth):
-        return True
+        bXLow = True
     if (gForXVisitsAlongY[gX] < gYWidth):
-        return True
+        bXLow = True
     if ((gX+1) <= gXMax) and (gForXVisitsAlongY[gX+1] < gYWidth):
-        return True
+        bXLow = True
 
     if ((gY-1) >= gYMin) and (gForYVisitsAlongX[gY-1] < gXWidth):
-        return True
+        bYLow = True
     if (gForYVisitsAlongX[gY] < gXWidth):
-        return True
+        bYLow = True
     if ((gY+1) <= gYMax) and (gForYVisitsAlongX[gY+1] < gXWidth):
+        bYLow = True
+
+    if (bAgressive and (bXLow or bYLow)):
         return True
+    elif (bXLow and bYLow):
+        return True
+    else:
+        return False
 
 
 WALL2RIGHT = 0
@@ -403,12 +414,15 @@ def superwalk_ok1():
         find_visited_rowscols()
         bContinue = False # This is temporary for debugging
 
+# For the last wallfollow
+# if iWalkEitherSide == 1, covers areas/rooms with objects scattered in them
+#                    == 2, even covers rooms with enclosed spiral areas within them
 def superwalk_good():
     global gWALLFOLLOWQUITCNT
     gWALLFOLLOWQUITCNT = 301
     wallfollow(True)
     find_visited_rowscols()
-    wallfollow(True,1)
+    wallfollow(True,2)
 
 superwalk_good()
 
