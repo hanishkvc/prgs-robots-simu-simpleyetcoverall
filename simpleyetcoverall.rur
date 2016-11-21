@@ -14,8 +14,8 @@ gTMCnt = 0
 gPZZBlockedL1 = 0
 gPZZBlockedL2 = 0
 gPZZOrientCnt = 0
-gAlongXVisits = dict()
-gAlongYVisits = dict()
+gForXVisitsAlongY = dict()
+gForYVisitsAlongX = dict()
 gXWidth = 0
 gYWidth = 0
 
@@ -233,18 +233,18 @@ def near_lowvisitarea():
     # Assumes lazy evaluation where first the condition
     # to the left is checked, before checking the condition
     # towards right of the conditional statement.
-    if ((gX-1) >= gXMin) and (gAlongXVisits[gX-1] < gYWidth):
+    if ((gX-1) >= gXMin) and (gForXVisitsAlongY[gX-1] < gYWidth):
         return True
-    if (gAlongXVisits[gX] < gYWidth):
+    if (gForXVisitsAlongY[gX] < gYWidth):
         return True
-    if ((gX+1) <= gXMax) and (gAlongXVisits[gX+1] < gYWidth):
+    if ((gX+1) <= gXMax) and (gForXVisitsAlongY[gX+1] < gYWidth):
         return True
 
-    if ((gY-1) >= gYMin) and (gAlongYVisits[gY-1] < gXWidth):
+    if ((gY-1) >= gYMin) and (gForYVisitsAlongX[gY-1] < gXWidth):
         return True
-    if (gAlongYVisits[gY] < gXWidth):
+    if (gForYVisitsAlongX[gY] < gXWidth):
         return True
-    if ((gY+1) <= gYMax) and (gAlongYVisits[gY+1] < gXWidth):
+    if ((gY+1) <= gYMax) and (gForYVisitsAlongX[gY+1] < gXWidth):
         return True
 
 
@@ -364,17 +364,17 @@ def find_visited_rowscols():
     print("XWidth => {}, YWidth => {}".format(gXWidth, gYWidth))
     for x in range(gXMin, gXMax+1):
         for y in range(gYMin, gYMax+1):
-            gAlongXVisits[x] = 0
-            gAlongYVisits[y] = 0
+            gForXVisitsAlongY[x] = 0
+            gForYVisitsAlongX[y] = 0
     for x in range(gXMin, gXMax+1):
         for y in range(gYMin, gYMax+1):
             if (visited_already(x,y)):
-                gAlongXVisits[x] += 1
-                gAlongYVisits[y] += 1
+                gForXVisitsAlongY[x] += 1
+                gForYVisitsAlongX[y] += 1
     for x in range(gXMin, gXMax+1):
-        print("For X[{}], numOfYs visited = {}".format(x, gAlongXVisits[x]))
+        print("For X[{}], numOfYs visited = {}".format(x, gForXVisitsAlongY[x]))
     for y in range(gYMin, gYMax+1):
-        print("For Y[{}], numOfXs visited = {}".format(y, gAlongYVisits[y]))
+        print("For Y[{}], numOfXs visited = {}".format(y, gForYVisitsAlongX[y]))
     # This may be used in future such that one
     # Follows Wall to reach these low visited areas
     # and run ParZigZag or something similar there to reach these not visited places
