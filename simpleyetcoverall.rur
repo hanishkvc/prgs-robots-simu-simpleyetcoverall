@@ -224,11 +224,27 @@ def walkotherway_andcomeback(iWalkEitherSide):
 
 
 def near_lowvisitarea():
+    # TODO:FUTURE: Instead of the simple check of less than
+    # other dimension's border, maybe
+    # it should take a average of cells visited in the given
+    # dimension and then use mid point between the border
+    # width and average as the threshold
+    # or better statistical model or so...
+    # Assumes lazy evaluation where first the condition
+    # to the left is checked, before checking the condition
+    # towards right of the conditional statement.
     if ((gX-1) >= gXMin) and (gAlongXVisits[gX-1] < gYWidth):
         return True
     if (gAlongXVisits[gX] < gYWidth):
         return True
     if ((gX+1) <= gXMax) and (gAlongXVisits[gX+1] < gYWidth):
+        return True
+
+    if ((gY-1) >= gYMin) and (gAlongYVisits[gY-1] < gXWidth):
+        return True
+    if (gAlongYVisits[gY] < gXWidth):
+        return True
+    if ((gY+1) <= gYMax) and (gAlongYVisits[gY+1] < gXWidth):
         return True
 
 
