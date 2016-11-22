@@ -2,56 +2,51 @@
 # HanishKVC, 2016
 #
 
-gFacing = 0
-gX = 0
-gY = 0
-gXMin = 0
-gXMax = 0
-gYMin = 0
-gYMax = 0
-gVisited = dict()
+
+gC = dict( facing=0, x=0, y=0,
+           visited = dict(),
+           xMin = 0, xMax = 0, yMin = 0, yMax = 0,
+           xWidth = 0, yWidth = 0,
+           forXNumVisitsAlongY = dict(), forYNumVisitsAlongX = dict() )
+
 gTMCnt = 0
 gPZZBlockedL1 = 0
 gPZZBlockedL2 = 0
 gPZZOrientCnt = 0
-gForXVisitsAlongY = dict()
-gForYVisitsAlongX = dict()
-gXWidth = 0
-gYWidth = 0
 
+print(gC)
 
 def move_ext(markVisited=True):
-    global gX, gY
-    global gXMin, gXMax, gYMin, gYMax
-    if (gFacing == 0):
-        gY += 1
-    elif (gFacing == 1):
-        gX -= 1
-    elif (gFacing == 2):
-        gY -= 1
-    elif (gFacing == 3):
-        gX += 1
+    global gC
+    if (gC['facing'] == 0):
+        gC['y'] += 1
+    elif (gC['facing'] == 1):
+        gC['x'] -= 1
+    elif (gC['facing'] == 2):
+        gC['y'] -= 1
+    elif (gC['facing'] == 3):
+        gC['x'] += 1
     else:
-        print("ERR: WRONGFACING: gFacing:{}, gX:{}, gY:{}".format(gFacing, gX, gY))
+        print("ERR: WRONGFACING: Facing:{}, X:{}, Y:{}".format(gC['facing'], gC['x'], gC['y']))
         exit()
     move()
     if markVisited:
         mark_as_visited()
-    if gXMin > gX:
-        gXMin = gX
-    if gXMax < gX:
-        gXMax = gX
-    if gYMin > gY:
-        gYMin = gY
-    if gYMax < gY:
-        gYMax = gY
+    if gC['xMin'] > gC['x']:
+        gC['xMin'] = gC['x']
+    if gC['xMax'] < gC['x']:
+        gC['xMax'] = gC['x']
+    if gC['yMin'] > gC['y']:
+        gC['yMin'] = gC['y']
+    if gC['yMax'] < gC['y']:
+        gC['yMax'] = gC['y']
 
 
 def turn_left_ext():
-    global gFacing
-    gFacing += 1
-    if (gFacing == 4):
-        gFacing = 0
+    global gC
+    gC['facing'] += 1
+    if (gC['facing'] == 4):
+        gC['facing'] = 0
     turn_left()
 
 
@@ -67,18 +62,18 @@ def turn_around():
 
 
 def mark_as_visited():
-    sKey = "{},{}".format(gX,gY)
-    gVisited[sKey] = 1
+    sKey = "{},{}".format(gC['x'],gC['y'])
+    gC['visited'][sKey] = 1
 
 
 def visited_already(X=None, Y=None):
     if X is None:
-        X = gX
+        X = gC['x']
     if Y is None:
-        Y = gY
+        Y = gC['y']
     sKey = "{},{}".format(X,Y)
     print("checking visited_already({})".format(sKey))
-    if (gVisited.has_key(sKey)):
+    if (gC['visited'].has_key(sKey)):
         return True
     else:
         return False
@@ -124,7 +119,7 @@ def parzigzag():
     iCnt = 0
     bContinue = True
     while bContinue:
-        sKeyExt = "{},{},{}".format(gX,gY,gFacing)
+        sKeyExt = "{},{},{}".format(gC['x'],gC['y'],gC['facing'])
         print(sKeyExt)
         mark_as_visited()
         if front_is_clear():
@@ -206,13 +201,13 @@ def wallfollowtest3():
 
 
 def walkotherway_andcomeback(iWalkEitherSide):
-    gSX = gX
-    gSY = gY
-    gSFacing = gFacing
+    gSX = gC['x']
+    gSY = gC['y']
+    gSFacing = gC['facing']
     for i in range(2): # Go and ComeBack so 2
         turn_around()
         while front_is_clear():
-            if (gSX == gX) and (gSY == gY) and (i == 1):
+            if (gSX == gC['x']) and (gSY == gC['y']) and (i == 1):
                 break
             move_ext()
             if (iWalkEitherSide > 0) and (i == 0):
@@ -237,18 +232,18 @@ def near_lowvisitarea(bAgressive=True):
     # towards right of the conditional statement.
     bXLow = False
     bYLow = False
-    if ((gX-1) >= gXMin) and (gForXVisitsAlongY[gX-1] < gYWidth):
+    if ((gC['x']-1) >= gC['xMin']) and (gC['forXNumVisitsAlongY'][gC['x']-1] < gC['yWidth']):
         bXLow = True
-    if (gForXVisitsAlongY[gX] < gYWidth):
+    if (gC['forXNumVisitsAlongY'][gC['x']] < gC['yWidth']):
         bXLow = True
-    if ((gX+1) <= gXMax) and (gForXVisitsAlongY[gX+1] < gYWidth):
+    if ((gC['x']+1) <= gC['xMax']) and (gC['forXNumVisitsAlongY'][gC['x']+1] < gC['yWidth']):
         bXLow = True
 
-    if ((gY-1) >= gYMin) and (gForYVisitsAlongX[gY-1] < gXWidth):
+    if ((gC['y']-1) >= gC['yMin']) and (gC['forYNumVisitsAlongX'][gC['y']-1] < gC['xWidth']):
         bYLow = True
-    if (gForYVisitsAlongX[gY] < gXWidth):
+    if (gC['forYNumVisitsAlongX'][gC['y']] < gC['xWidth']):
         bYLow = True
-    if ((gY+1) <= gYMax) and (gForYVisitsAlongX[gY+1] < gXWidth):
+    if ((gC['y']+1) <= gC['yMax']) and (gC['forYNumVisitsAlongX'][gC['y']+1] < gC['xWidth']):
         bYLow = True
 
     if (bAgressive and (bXLow or bYLow)):
@@ -291,9 +286,9 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
         turn_dir_opp = turn_left_ext
         turn_dir_opp()
 
-    gSX = gX
-    gSY = gY
-    gSFacing = gFacing
+    gSX = gC['x']
+    gSY = gC['y']
+    gSFacing = gC['facing']
     gSAgain = 0
     iCnt = 0
     bContinue = True
@@ -305,13 +300,13 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
             print("NumOf WallSide Steps = {}".format(iCnt))
         iDirCheckedCnt = 0
         while True:
-            if (gSX == gX) and (gSY == gY) and (gSFacing == gFacing):
+            if (gSX == gC['x']) and (gSY == gC['y']) and (gSFacing == gC['facing']):
                 gSAgain += 1
-                print("At Starting position [{},{},{}] after {} steps, for {} time".format(gX,gY,gFacing,iCnt,gSAgain))
+                print("At Starting position [{},{},{}] after {} steps, for {} time".format(gC['x'],gC['y'],gC['facing'],iCnt,gSAgain))
                 if (gSAgain >= gWALLFOLLOWMAXREPEATCNT):
                     bContinue = False
             else:
-                print("position [{},{},{}] after {} steps".format(gX,gY,gFacing,iCnt))
+                print("position [{},{},{}] after {} steps".format(gC['x'],gC['y'],gC['facing'],iCnt))
             turn_dir()
             if not front_is_clear():
                 break
@@ -320,7 +315,7 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
                 move_ext()
         if bWalkCorrespondingRowCol:
             if (iWalkEitherSide > 0) and (near_lowvisitarea()):
-                print("Triggering WalkEitherSide for X,Y={},{}".format(gX,gY))
+                print("Triggering WalkEitherSide for X,Y={},{}".format(gC['x'],gC['y']))
                 walkotherway_andcomeback(iWalkEitherSide)
             else:
                 walkotherway_andcomeback(0)
@@ -333,8 +328,8 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
 
 def wallfollow_updateparams():
     global gWALLFOLLOWQUITCNT
-    iXDelta = gXMax - gXMin
-    iYDelta = gYMax - gYMin
+    iXDelta = gC['xMax'] - gC['xMin']
+    iYDelta = gC['yMax'] - gC['yMin']
     iBoundry = iXDelta + iYDelta
     print("iBoundry Found = {}".format(iBoundry))
     gWALLFOLLOWQUITCNT = int(iBoundry * 10.3)
@@ -364,28 +359,27 @@ def spiral(turn_dir, iTurnMod):
 
 
 def find_visited_rowscols():
-    global gXWidth
-    global gYWidth
+    global gC
     # Using Visited map
     # Find Ys (i.e cells of X) which are visited, for_each/along X
     # Find Xs (i.e cells of Y) which are visited, for_each/along Y
-    gXWidth = (gXMax - gXMin) + 1
-    gYWidth = (gYMax - gYMin) + 1
-    print("X => {} to {}, Y => {} to {}".format(gXMin, gXMax, gYMin, gYMax))
-    print("XWidth => {}, YWidth => {}".format(gXWidth, gYWidth))
-    for x in range(gXMin, gXMax+1):
-        for y in range(gYMin, gYMax+1):
-            gForXVisitsAlongY[x] = 0
-            gForYVisitsAlongX[y] = 0
-    for x in range(gXMin, gXMax+1):
-        for y in range(gYMin, gYMax+1):
+    gC['xWidth'] = (gC['xMax'] - gC['xMin']) + 1
+    gC['yWidth'] = (gC['yMax'] - gC['yMin']) + 1
+    print("X => {} to {}, Y => {} to {}".format(gC['xMin'], gC['xMax'], gC['yMin'], gC['yMax']))
+    print("XWidth => {}, YWidth => {}".format(gC['xWidth'], gC['yWidth']))
+    for x in range(gC['xMin'], gC['xMax']+1):
+        for y in range(gC['yMin'], gC['yMax']+1):
+            gC['forXNumVisitsAlongY'][x] = 0
+            gC['forYNumVisitsAlongX'][y] = 0
+    for x in range(gC['xMin'], gC['xMax']+1):
+        for y in range(gC['yMin'], gC['yMax']+1):
             if (visited_already(x,y)):
-                gForXVisitsAlongY[x] += 1
-                gForYVisitsAlongX[y] += 1
-    for x in range(gXMin, gXMax+1):
-        print("For X[{}], numOfYs visited = {}".format(x, gForXVisitsAlongY[x]))
-    for y in range(gYMin, gYMax+1):
-        print("For Y[{}], numOfXs visited = {}".format(y, gForYVisitsAlongX[y]))
+                gC['forXNumVisitsAlongY'][x] += 1
+                gC['forYNumVisitsAlongX'][y] += 1
+    for x in range(gC['xMin'], gC['xMax']+1):
+        print("For X[{}], numOfYs visited = {}".format(x, gC['forXNumVisitsAlongY'][x]))
+    for y in range(gC['yMin'], gC['yMax']+1):
+        print("For Y[{}], numOfXs visited = {}".format(y, gC['forYNumVisitsAlongX'][y]))
     # This may be used in future such that one
     # Follows Wall to reach these low visited areas
     # and run ParZigZag or something similar there to reach these not visited places
