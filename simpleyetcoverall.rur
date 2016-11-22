@@ -63,7 +63,10 @@ def turn_around():
 
 def mark_as_visited():
     sKey = "{},{}".format(gC['x'],gC['y'])
-    gC['visited'][sKey] = 1
+    if gC['visited'].has_key(sKey):
+        gC['visited'][sKey] += 1
+    else:
+        gC['visited'][sKey] = 1
 
 
 def visited_already(X=None, Y=None):
@@ -74,9 +77,9 @@ def visited_already(X=None, Y=None):
     sKey = "{},{}".format(X,Y)
     print("checking visited_already({})".format(sKey))
     if (gC['visited'].has_key(sKey)):
-        return True
+        return gC['visited'][sKey]
     else:
-        return False
+        return 0
 
 
 def turn_magic():
@@ -217,6 +220,15 @@ def walkotherway_andcomeback(iWalkEitherSide):
                 turn_around()
                 if near_lowvisitarea(False):
                     walkotherway_andcomeback(iWalkEitherSide-1)
+                turn_left_ext()
+            elif (iWalkEitherSide == 0) and (visited_already() == 1):
+                print("DEBUG: Here already...")
+                turn_left_ext()
+                if near_lowvisitarea(False):
+                    walkotherway_andcomeback(iWalkEitherSide)
+                turn_around()
+                if near_lowvisitarea(False):
+                    walkotherway_andcomeback(iWalkEitherSide)
                 turn_left_ext()
 
 
@@ -373,7 +385,7 @@ def find_visited_rowscols():
             gC['forYNumVisitsAlongX'][y] = 0
     for x in range(gC['xMin'], gC['xMax']+1):
         for y in range(gC['yMin'], gC['yMax']+1):
-            if (visited_already(x,y)):
+            if (visited_already(x,y) > 0):
                 gC['forXNumVisitsAlongY'][x] += 1
                 gC['forYNumVisitsAlongX'][y] += 1
     for x in range(gC['xMin'], gC['xMax']+1):
@@ -416,7 +428,7 @@ def superwalk_good():
     gWALLFOLLOWQUITCNT = 301
     wallfollow(True)
     find_visited_rowscols()
-    wallfollow(True,2)
+    wallfollow(True,1)
 
 superwalk_good()
 
