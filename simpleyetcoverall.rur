@@ -75,7 +75,7 @@ def visited_already(X=None, Y=None):
     if Y is None:
         Y = gC['y']
     sKey = "{},{}".format(X,Y)
-    print("checking visited_already({})".format(sKey))
+    #print("checking visited_already({})".format(sKey))
     if (gC['visited'].has_key(sKey)):
         return gC['visited'][sKey]
     else:
