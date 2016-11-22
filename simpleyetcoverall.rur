@@ -203,7 +203,7 @@ def wallfollowtest3():
             turn_dir_opp()
 
 
-def walkotherway_andcomeback(iWalkEitherSide):
+def walkotherway_andcomeback(iWalkEitherSide,bExplore):
     gSX = gC['x']
     gSY = gC['y']
     gSFacing = gC['facing']
@@ -216,19 +216,19 @@ def walkotherway_andcomeback(iWalkEitherSide):
             if (iWalkEitherSide > 0) and (i == 0):
                 turn_left_ext()
                 if near_lowvisitarea(False):
-                    walkotherway_andcomeback(iWalkEitherSide-1)
+                    walkotherway_andcomeback(iWalkEitherSide-1,bExplore)
                 turn_around()
                 if near_lowvisitarea(False):
-                    walkotherway_andcomeback(iWalkEitherSide-1)
+                    walkotherway_andcomeback(iWalkEitherSide-1,bExplore)
                 turn_left_ext()
-            elif (iWalkEitherSide == 0) and (visited_already() == 1):
-                print("DEBUG: Here already...")
+            elif bExplore and (iWalkEitherSide == 0) and (visited_already() == 1):
+                print("wallfollow:rowcol+eitherside: Exploring...")
                 turn_left_ext()
                 if near_lowvisitarea(False):
-                    walkotherway_andcomeback(iWalkEitherSide)
+                    walkotherway_andcomeback(iWalkEitherSide,bExplore)
                 turn_around()
                 if near_lowvisitarea(False):
-                    walkotherway_andcomeback(iWalkEitherSide)
+                    walkotherway_andcomeback(iWalkEitherSide,bExplore)
                 turn_left_ext()
 
 
@@ -270,7 +270,7 @@ WALL2RIGHT = 0
 WALL2LEFT = 1
 gWALLFOLLOWQUITCNT = 2048
 gWALLFOLLOWMAXREPEATCNT = 2
-def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
+def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0,bExplore=False):
     print("MODE: WallFollow")
     wallTo = WALL2RIGHT
     turn_left_ext()
@@ -328,9 +328,9 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0):
         if bWalkCorrespondingRowCol:
             if (iWalkEitherSide > 0) and (near_lowvisitarea()):
                 print("Triggering WalkEitherSide for X,Y={},{}".format(gC['x'],gC['y']))
-                walkotherway_andcomeback(iWalkEitherSide)
+                walkotherway_andcomeback(iWalkEitherSide,bExplore)
             else:
-                walkotherway_andcomeback(0)
+                walkotherway_andcomeback(0,bExplore)
         turn_dir_opp()
         if front_is_clear():
             move_ext()
@@ -428,7 +428,7 @@ def superwalk_good():
     gWALLFOLLOWQUITCNT = 301
     wallfollow(True)
     find_visited_rowscols()
-    wallfollow(True,1)
+    wallfollow(True,1,True)
 
 superwalk_good()
 
