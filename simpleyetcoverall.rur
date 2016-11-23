@@ -15,7 +15,14 @@ gPZZBlockedL1 = 0
 gPZZBlockedL2 = 0
 gPZZOrientCnt = 0
 
+giCurDebugLevel = 5
+
 print(gC)
+
+def dprint(sMsg,iDebugLevel=1):
+    if (iDebugLevel > giCurDebugLevel):
+        print(sMsg)
+
 
 def move_ext(markVisited=True):
     global gC
@@ -231,6 +238,7 @@ def walkotherway_andcomeback(iWalkEitherSide,bExplore):
                 if near_lowvisitarea(False):
                     walkotherway_andcomeback(iWalkEitherSide,bExplore)
                 turn_left_ext()
+                print("wallfollow:rowcol+eitherside: Exploring Done")
                 gC['processVisited'] = True
 
 
@@ -324,7 +332,7 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0,bExplore=False):
                 if (gSAgain >= gWALLFOLLOWMAXREPEATCNT):
                     bContinue = False
             else:
-                print("position [{},{},{}] after {} steps".format(gC['x'],gC['y'],gC['facing'],iCnt))
+                dprint("position [{},{},{}] after {} steps".format(gC['x'],gC['y'],gC['facing'],iCnt))
             turn_dir()
             if not front_is_clear():
                 break
