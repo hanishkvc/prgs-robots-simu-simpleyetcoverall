@@ -5,6 +5,7 @@
 
 gC = dict( facing=0, x=0, y=0,
            visited = dict(),
+           processVisited = False,
            xMin = 0, xMax = 0, yMin = 0, yMax = 0,
            xWidth = 0, yWidth = 0,
            forXNumVisitsAlongY = dict(), forYNumVisitsAlongX = dict() )
@@ -230,6 +231,7 @@ def walkotherway_andcomeback(iWalkEitherSide,bExplore):
                 if near_lowvisitarea(False):
                     walkotherway_andcomeback(iWalkEitherSide,bExplore)
                 turn_left_ext()
+                gC['processVisited'] = True
 
 
 def near_lowvisitarea(bAgressive=True):
@@ -270,6 +272,7 @@ WALL2RIGHT = 0
 WALL2LEFT = 1
 gWALLFOLLOWQUITCNT = 2048
 gWALLFOLLOWMAXREPEATCNT = 2
+gWALLFOLLOWPROCESSVISITEDCNT = 15
 def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0,bExplore=False):
     print("MODE: WallFollow")
     wallTo = WALL2RIGHT
@@ -308,8 +311,11 @@ def wallfollow(bWalkCorrespondingRowCol=False,iWalkEitherSide=0,bExplore=False):
         iCnt += 1
         if iCnt > gWALLFOLLOWQUITCNT:
             bContinue = False
-        if (iCnt % 25) == 0:
+        if (iCnt % gWALLFOLLOWPROCESSVISITEDCNT) == 0:
             print("NumOf WallSide Steps = {}".format(iCnt))
+            if (gC['processVisited']):
+                find_visited_rowscols()
+                gC['processVisited'] = False
         iDirCheckedCnt = 0
         while True:
             if (gSX == gC['x']) and (gSY == gC['y']) and (gSFacing == gC['facing']):
@@ -372,6 +378,7 @@ def spiral(turn_dir, iTurnMod):
 
 def find_visited_rowscols():
     global gC
+    print("FindVisitedAreas")
     # Using Visited map
     # Find Ys (i.e cells of X) which are visited, for_each/along X
     # Find Xs (i.e cells of Y) which are visited, for_each/along Y
